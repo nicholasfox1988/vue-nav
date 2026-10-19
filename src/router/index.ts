@@ -23,6 +23,11 @@ const routes: RouteRecordRaw[] = [
     name: 'k2',
     component: () => import('../views/K2.vue')
   },
+  {
+    path: '/anna',
+    name: 'anna',
+    component: () => import('../views/Anna.vue')
+  },
   // 404 兜底
   {
     path: '/:pathMatch(.*)*',

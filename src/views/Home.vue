@@ -7,7 +7,8 @@ const navLinks = ref<NavLink[]>([
   { name: 'pickup', path: '/pickup', icon: '📦'},
   { name: 'yun',    path: '/yun',    icon: '📦'},
   { name: 'k1',     path: '/k1',     icon: '🔑'},
-  { name: 'k2',     path: '/k2',     icon: '🔑'}
+  { name: 'k2',     path: '/k2',     icon: '🔑'},
+  { name: 'anna',   path: '/anna',   icon: '🔑'},
 ])
 
 </script>
