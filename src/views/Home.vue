@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import type { NavLink } from '../types/nav'
-
-const router = useRouter()
 
 // 四个跳转链接（强类型数组）
 const navLinks = ref<NavLink[]>([
