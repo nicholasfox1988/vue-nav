@@ -4,10 +4,10 @@ import type { NavLink } from '../types/nav'
 
 // 四个跳转链接（强类型数组）
 const navLinks = ref<NavLink[]>([
-  { name: 'pickup', path: '/pickup', icon: '📦', desc: '提货 / 取件页面' },
-  { name: 'yun',    path: '/yun',    icon: '📦', desc: '云服务管理页面' },
-  { name: 'k1',     path: '/k1',     icon: '🔑', desc: 'K1 功能模块' },
-  { name: 'k2',     path: '/k2',     icon: '🔑', desc: 'K2 功能模块' }
+  { name: 'pickup', path: '/pickup', icon: '📦'},
+  { name: 'yun',    path: '/yun',    icon: '📦'},
+  { name: 'k1',     path: '/k1',     icon: '🔑'},
+  { name: 'k2',     path: '/k2',     icon: '🔑'}
 ])
 
 </script>
@@ -23,9 +23,7 @@ const navLinks = ref<NavLink[]>([
         :to="link.path"
         class="nav-card"
       >
-        <span class="icon">{{ link.icon }}</span>
-        <h2>{{ link.name }}</h2>
-        <p>{{ link.desc }}</p >
+        <span class="icon">{{ link.icon }}   {{ link.name }}</span>
         <span class="arrow">↗</span>
       </router-link>
     </div>
