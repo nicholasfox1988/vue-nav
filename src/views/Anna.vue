@@ -107,7 +107,7 @@ const exportData = (): void => {
 
   const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')
   const fileNameWithSuffix = fileName.value && fileName.value !== '未选择文件'
-    ? fileName.value.replace(/\.[^.]+$/, '') + `-处理后-${timestamp}.xlsx`
+    ? '-处理后-'+fileName.value.replace(/\.[^.]+$/, '') + `.xlsx`
     : `订单汇总-处理后-${timestamp}.xlsx`
 
   XLSX.writeFile(workbook, fileNameWithSuffix)
