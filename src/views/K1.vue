@@ -2,13 +2,14 @@
 import { ref,reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import * as XLSX from 'xlsx'
+import {type dataType } from '../types/nav'
 
 const router = useRouter()
 const back = (): void => {
   router.push('/')
 }
 
-const fileName = ref('未选择文件')
+// const fileName = ref('未选择文件')
 const excelData = reactive([])
 
 const hide = ()=> {
@@ -30,14 +31,14 @@ const handleFileChange = async (event: Event): Promise<void> => {
   const sheet = workbook.Sheets[workbook.SheetNames[0]]
   // const dataRows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, blankrows: false, defval: '' }) as any[][]
 
-  const jsonData1 = XLSX.utils.sheet_to_json(sheet);
-  const jsonData2 = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-  const headers = jsonData2[0];
-  // console.log(headers);                
+  const jsonData1:dataType[] = XLSX.utils.sheet_to_json(sheet);
+  const jsonData2:dataType[] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+  const headers:string[]= jsonData2[0];
+  console.log(headers);                
   // console.log(jsonData1);
   // Process the data
   const excelData1 = jsonData1.map(row => {
-      const no = row[headers[1]];
+      const no= row[headers[1]];
       const px = no.toString().slice(-3);
       return {
           px: px,
