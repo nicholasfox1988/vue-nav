@@ -4,13 +4,3 @@ export interface NavLink {
   icon: string
 }
 
-export interface dataType {
-  consignee: string
-  ctns: number
-  date: string
-  delivery: string
-  hide: boolean
-  no: number
-  px: string
-  tick: boolean
-}
