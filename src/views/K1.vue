@@ -39,8 +39,12 @@ const querySummary = computed<string>(() => {
   if (filteredRows.value.length === 0) {
     return '未查询到相关结果'
   }
-
-  return `查询到 ${filteredRows.value.length} 条记录`
+  
+  return `
+    ${filteredRows.value[0].px}
+    ${filteredRows.value[0].consignee}
+    --->(${filteredRows.value[0].ctns} )
+  `
 })
 
 const handleSearchKeydown = (event: KeyboardEvent): void => {
@@ -128,7 +132,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
     .map((row: string[]) => {
       const consignee = toDisplayText(row[0])
       const no = toDisplayText(row[1])
-      const delivery = toDisplayText(row[7])
+      const delivery = toDisplayText(row[8]) ? toDisplayText(row[7]) : '不处理'
       const date = toDisplayText(row[8])
 
       if (!no) {
@@ -168,7 +172,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
         v-model="searchText"
         type="text"
         placeholder="请输入 PX 号码或姓名/单号"
-        @keydown="handleSearchKeydown"
+        @keyup="handleSearchKeydown"
       />
 
       <div v-if="deliveryTotals.length" class="delivery-summary">
@@ -198,7 +202,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
             v-for="row in excelData"
             :key="row.no + row.px"
             :class="{ 'row-checked': row.tick }"
-            v-show="!row.hide && (normalizedSearch ? filteredRows.some((item) => item.no === row.no && item.px === row.px) : true)"
+            v-show="!row.hide"
           >
             <td>{{ row.px }}</td>
             <td><input v-model="row.tick" type="checkbox" /></td>
@@ -231,9 +235,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
   margin: 5px;
   padding: 12px;
 }
-button {
-  display: flex;
-}
+
 input[type='text'] {
   width: 100%;
   max-width: 360px;

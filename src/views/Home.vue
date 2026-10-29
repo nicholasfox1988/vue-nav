@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { NavLink } from '../types/nav'
 
+interface NavLink{
+  name:string
+  path:string
+  icon:string
+}
 // 四个跳转链接（强类型数组）
 const navLinks = ref<NavLink[]>([
   { name: 'pickup', path: '/pickup', icon: '📦'},
