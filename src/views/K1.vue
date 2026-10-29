@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import * as XLSX from 'xlsx'
+
 import type { ExcelRow } from '../types/dataType'
 
 const router = useRouter()
@@ -11,77 +12,13 @@ const back = (): void => {
 }
 
 const excelData = reactive<ExcelRow[]>([])
-const searchText = ref('')
-
-const normalizedSearch = computed<string>(() => searchText.value.trim())
-
-const filteredRows = computed<ExcelRow[]>(() => {
-  if (!normalizedSearch.value) {
-    return excelData
-  }
-
-  const query = normalizedSearch.value.toLowerCase()
-
-  return excelData.filter((row) => {
-    const pxMatch = row.px.toLowerCase().includes(query)
-    const noMatch = row.no.toLowerCase().includes(query)
-    const consigneeMatch = row.consignee.toLowerCase().includes(query)
-
-    return pxMatch || noMatch || consigneeMatch
-  })
-})
-
-const querySummary = computed<string>(() => {
-  if (!normalizedSearch.value) {
-    return '请输入 PX 号码进行查询'
-  }
-
-  if (filteredRows.value.length === 0) {
-    return '未查询到相关结果'
-  }
-  
-  return `
-    ${filteredRows.value[0].px}
-    ${filteredRows.value[0].consignee}
-    --->(${filteredRows.value[0].ctns} )
-  `
-})
-
-const handleSearchKeydown = (event: KeyboardEvent): void => {
-  if (event.key === 'Enter') {
-    searchText.value = ''
-  }
-}
-
-const toNumber = (value: unknown): number => {
-  if (value === null || value === undefined || value === '') {
-    return 0
-  }
-
-  const normalized = String(value).replace(/[,，\s]/g, '')
-  const parsed = Number(normalized)
-
-  return Number.isFinite(parsed) ? parsed : 0
-}
-
-const deliveryTotals = computed<Array<{ delivery: string, total: number }>>(() => {
-  const totalsMap = new Map<string, number>()
-
-  filteredRows.value.forEach((row) => {
-    const current = totalsMap.get(row.delivery) ?? 0
-    totalsMap.set(row.delivery, current + toNumber(row.ctns))
-  })
-
-  return [...totalsMap.entries()]
-    .map(([delivery, total]) => ({ delivery, total }))
-    .sort((a, b) => a.delivery.localeCompare(b.delivery))
-})
+let deliveryTotals:object={}
+let speakText:string=''
 
 const toDisplayText = (value: unknown): string => {
   if (value === null || value === undefined) {
     return ''
   }
-
   return String(value).trim()
 }
 
@@ -95,6 +32,29 @@ const showAll = (): void => {
   excelData.forEach((element) => {
     element.hide = false
   })
+}
+
+const speak = (text:string):void=>{
+  const msg = new SpeechSynthesisUtterance(text)
+  window.speechSynthesis.speak(msg)
+}
+
+const handleSearchKeydown = (): void => {
+  const search= document.getElementById('searchText') as HTMLInputElement
+  const result = document.getElementById('result') as HTMLParagraphElement
+  // const [{ px,consignee,ctns,delivery }] = excelData.filter(row=> row.px===(search).value.trim().toLowerCase())
+  const x = excelData.filter(row=> row.px===(search).value.trim().toLowerCase())
+
+  if(x.length===0){
+    result.innerText = `未找到该 PX 号码`
+    speakText='找不到'
+    speak(speakText)
+  }else{
+    result.innerText = `${x[0].px}--${x[0].delivery}--${x[0].consignee}--${x[0].ctns} `
+    speakText=x[0].delivery    
+    speak(speakText)
+  }
+  search.value=''
 }
 
 const handleFileChange = async (event: Event): Promise<void> => {
@@ -118,12 +78,11 @@ const handleFileChange = async (event: Event): Promise<void> => {
     header: 1,
     raw: false,
     blankrows: false,
-    defval: ''
+    defval: '' 
   }) as string[][]
 
   if (sheetRows.length <= 1) {
     excelData.splice(0, excelData.length)
-    searchText.value = ''
     return
   }
 
@@ -157,7 +116,11 @@ const handleFileChange = async (event: Event): Promise<void> => {
     .sort((a, b) => a.delivery.localeCompare(b.delivery, undefined, { sensitivity: 'base' }))
 
   excelData.splice(0, excelData.length, ...processedRows)
-  searchText.value = ''
+  //将excelData中的delivery字段值作为键，对应的数量作为值，存入deliveryTotals对象中
+  deliveryTotals = excelData.reduce((acc:any, cur:any) => {
+    acc[cur.delivery] = (acc[cur.delivery] || 0) + Number(cur.ctns)
+    return acc
+  }, {} as any)   
 }
 </script>
 
@@ -167,18 +130,19 @@ const handleFileChange = async (event: Event): Promise<void> => {
     <input type="file" accept=".xlsx,.xls,.csv" @change="handleFileChange" />
 
     <div class="box1">
-      <p>{{ querySummary }}</p>
+      <p id="result">查询结果</p>
       <input
-        v-model="searchText"
+        id="searchText"
         type="text"
         placeholder="请输入 PX 号码或姓名/单号"
-        @keyup="handleSearchKeydown"
+        @keyup.enter="handleSearchKeydown"
+        autocomplete="off"
       />
 
-      <div v-if="deliveryTotals.length" class="delivery-summary">
-        <div v-for="item in deliveryTotals" :key="item.delivery" class="summary-item">
-          <span>{{ item.delivery }}</span>
-          <strong>{{ item.total }}</strong>
+      <div v-if="deliveryTotals" class="delivery-summary">
+        <div v-for="(value,key,index) in deliveryTotals" :key="index" class="summary-item">
+          <span>{{ key }}</span>
+          <strong>{{ value }}</strong>
         </div>
       </div>
     </div>
@@ -189,12 +153,12 @@ const handleFileChange = async (event: Event): Promise<void> => {
           <tr>
             <th>px</th>
             <th>
-              <button class="diaomao" @dblclick="showAll" @click="hideSelectedRows">click</button>
+              <button @dblclick="showAll" @click="hideSelectedRows">点</button>
             </th>
-            <th>Delivery</th>
-            <th>Q...</th>
-            <th>NAME</th>
-            <th>No</th>
+            <th>delivery</th>
+            <th>ctns</th>
+            <th>name</th>
+            <th>no</th>
           </tr>
         </thead>
         <tbody id="tableBody">

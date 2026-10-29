@@ -106,7 +106,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
 
 <style scoped>
 .table-container {
-  height: 500px; /* 必须设置容器高度 */
+  height: 700px; /* 必须设置容器高度 */
   overflow-y: auto;
   position: relative;
 }
