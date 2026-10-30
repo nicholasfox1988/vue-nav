@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import * as XLSX from 'xlsx'
 
-import type { ExcelRow } from '../types/dataType'
+import type { ExcelRow } from '../types/shipData'
 
 const router = useRouter()
 
@@ -147,7 +147,7 @@ const handleFileChange = async (event: Event): Promise<void> => {
       </div>
     </div>
 
-    <div class="box2">
+    <div class="table-container">
       <table id="dataTable">
         <thead>
           <tr>
@@ -185,15 +185,19 @@ const handleFileChange = async (event: Event): Promise<void> => {
 .page {
   padding: 12px;
 }
-.box1 {
-  background-color: pink;
+.table-container {
+  background-color: rgb(192, 255, 243);
+  height: 550px; /* 必须设置容器高度 */
+  overflow-y: auto;
+  position: relative;
   border: 3px solid green;
   border-radius: 10px;
   margin: 5px;
-  padding: 12px;
+  padding: 0px 3px;
 }
-.box2 {
-  background-color: rgb(192, 255, 243);
+
+.box1 {
+  background-color: pink;
   border: 3px solid green;
   border-radius: 10px;
   margin: 5px;
@@ -226,9 +230,14 @@ input[type='text'] {
 .summary-item strong {
   color: #0f172a;
 }
+
 th {
+  height: 15px;
+  position: sticky;
+  top: 0;
   background-color: aqua;
   padding: 8px;
+  z-index: 1;
 }
 tr.row-checked td {
   color: #777;
