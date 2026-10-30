@@ -28,6 +28,11 @@ const routes: RouteRecordRaw[] = [
     name: 'anna',
     component: () => import('../views/Anna.vue')
   },
+  {
+    path: '/supabase',
+    name: 'supabase',
+    component: () => import('../views/Supabase.vue')
+  },
   // 404 兜底
   {
     path: '/:pathMatch(.*)*',

@@ -13,6 +13,7 @@ const navLinks = ref<NavLink[]>([
   { name: 'k1',     path: '/k1',     icon: '🔑'},
   { name: 'k2',     path: '/k2',     icon: '🔑'},
   { name: 'anna',   path: '/anna',   icon: '🔑'},
+  { name: 'supabase',   path: '/supabase',   icon: '🔑'},
 ])
 
 </script>
