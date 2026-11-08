@@ -75,13 +75,12 @@ const handleFileChange = async (event: Event): Promise<void> => {
         <thead>
           <tr>
             <th>
-              <button @dblclick="showAll" @click="hideSelectedRows">click</button>
+              <button @dblclick="showAll" @click="hideSelectedRows">O</button>
             </th>
             <th>name</th>
             <th>pic</th>
             <th>fo</th>
             <th>no</th>
-            <th>d</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -96,7 +95,6 @@ const handleFileChange = async (event: Event): Promise<void> => {
             <td>{{ row.pic }}</td>
             <td>{{ row.fo }}</td>
             <td>{{ row.no }}</td>
-            <td>{{ row.delivery }}</td>
           </tr>
         </tbody>
       </table>
@@ -105,10 +103,15 @@ const handleFileChange = async (event: Event): Promise<void> => {
 </template>
 
 <style scoped>
+.page{
+  margin: 5vh 0%;
+  padding: 0;
+}
 .table-container {
-  height: 550px; /* 必须设置容器高度 */
+  height: 580px; /* 必须设置容器高度 */
   overflow-y: auto;
   position: relative;
+  margin: 0%;
 }
 
 table {

@@ -76,11 +76,11 @@ const handleFileChange = async (event: Event): Promise<void> => {
             <th>
               <button @dblclick="showAll" @click="hideSelectedRows">click</button>
             </th>
+            <th>d</th>
             <th>name</th>
             <th>pic</th>
             <th>fo</th>
             <th>no</th>
-            <th>d</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -91,11 +91,11 @@ const handleFileChange = async (event: Event): Promise<void> => {
             v-show="!row.hide"
           >
             <td><input v-model="row.tick" type="checkbox" /></td>
+            <td>{{ row.delivery }}</td>
             <td>{{ row.name }}</td>
             <td>{{ row.pic }}</td>
             <td>{{ row.fo }}</td>
             <td>{{ row.no }}</td>
-            <td>{{ row.delivery }}</td>
           </tr>
         </tbody>
       </table>
@@ -104,8 +104,12 @@ const handleFileChange = async (event: Event): Promise<void> => {
 </template>
 
 <style scoped>
+.page{
+  margin: 5vh 0%;
+  padding: 0;
+}
 .table-container {
-  height: 550px; /* 必须设置容器高度 */
+  height: 580px; /* 必须设置容器高度 */
   overflow-y: auto;
   position: relative;
 }
